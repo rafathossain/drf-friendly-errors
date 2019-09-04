@@ -238,7 +238,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
                             return {'code': code, 'message': error}
             # Here we know that error was raised by custom validate method
             # in serializer
-            validator = getattr(self, "validate_%s" % field.field_name)
+            validator = getattr(self, "validate_%s" % field.field_name, None)
             if validator and self._run_validator(validator, field, error):
                 code = self.get_validator_error_code(validator, error)
                 return {'code': code, 'field': field.field_name,
