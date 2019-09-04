@@ -159,8 +159,11 @@ class FriendlyErrorMessagesMixin(FieldMap):
                     field, message, kwargs):
                 return key
             unformatted = field.error_messages[key]
-            if unformatted.format(**kwargs) == message:
-                return key
+            try:
+                if unformatted.format(**kwargs) == message:
+                    return key
+            except KeyError:
+                pass
         if getattr(field, 'child_relation', None):
             return self.find_key(field=field.child_relation, message=message,
                                  field_name=field_name)
