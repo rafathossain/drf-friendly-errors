@@ -15,7 +15,7 @@ def friendly_exception_handler(exc, context):
     if response is not None:
         if is_pretty(response):
             return response
-        error_message = response.data['detail']
+        error_message = response.data.get('detail', 'error')
         error_code = settings.FRIENDLY_EXCEPTION_DICT.get(
             exc.__class__.__name__)
         response.data.pop('detail', {})
