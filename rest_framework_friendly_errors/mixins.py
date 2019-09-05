@@ -8,15 +8,15 @@ from rest_framework.exceptions import ValidationError as RestValidationError, Er
 from rest_framework.settings import api_settings
 from rest_framework.utils.serializer_helpers import ReturnDict
 
-from rest_framework_friendly_errors import settings
-from rest_framework_friendly_errors.field_map import FieldMap
+from . import settings
+from .field_map import FieldMap
 
 
 class FriendlyErrorMessagesMixin(FieldMap):
     """
         A serializer mixin which formats the `serializer.ValidationError` message
         according to friendly format.
-        """
+    """
 
     FIELD_VALIDATION_ERRORS = {}
     NON_FIELD_ERRORS = {}
@@ -55,9 +55,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
             if error_key is None and error_code is None:
                 raise ValueError('You have to provide either error key'
                                  ' or error code')
-            if error_code is not None:
-                error_code = error_code
-            else:
+            if error_code is None:
                 try:
                     error_code = settings.FRIENDLY_FIELD_ERRORS[field_type].get(
                         error_key)
@@ -238,7 +236,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
                             child_field, error, parent=field)
                         if validator:
                             code = self.get_validator_error_code(validator, error)
-                            return {'code': code, 'message': error}
+                            return {'code': code, 'field': field.field_name, 'message': error}
             # Here we know that error was raised by custom validate method
             # in serializer
             validator = getattr(self, "validate_%s" % field.field_name, None)
@@ -246,14 +244,19 @@ class FriendlyErrorMessagesMixin(FieldMap):
                 code = self.get_validator_error_code(validator, error)
                 return {'code': code, 'field': field.field_name,
                         'message': error}
+            elif settings.FRIENDLY_FIELD_ERRORS.get(field_type, None):
+                code = settings.FRIENDLY_FIELD_ERRORS.get(field_type, {}).get(getattr(error, 'code', None), None)
+                return {'code': code,
+                        'field': field.field_name,
+                        'message': error}
             else:
                 # maybe field error was raised directly from `validate` method
                 code = self.FIELD_VALIDATION_ERRORS.get(
                     field.field_name, getattr(error, 'code', None))
                 return {'code': code, 'field': field.field_name,
                         'message': error}
-        code = settings.FRIENDLY_FIELD_ERRORS.get(field_type, {}).get(
-            key, getattr(error, 'code', None))
+
+        code = settings.FRIENDLY_FIELD_ERRORS.get(field_type, {}).get(key, getattr(error, 'code', None))
         return {'code': code,
                 'field': field.field_name,
                 'message': error}
