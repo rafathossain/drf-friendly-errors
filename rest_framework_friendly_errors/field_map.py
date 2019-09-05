@@ -24,7 +24,8 @@ class FieldMap(object):
             'composite': ['ListField', 'DictField', 'JSONField'],
             'relation': ['StringRelatedField', 'PrimaryKeyRelatedField',
                          'HyperlinkedRelatedField', 'SlugRelatedField',
-                         'HyperlinkedIdentityField', 'ManyRelatedField'],
+                         'HyperlinkedIdentityField', 'ManyRelatedField'
+                         'CitixenPrimaryKeyRelatedField', 'CitixenGroupPermissionRelatedField'],
             'serializer': ['ListSerializer'],
             'miscellaneous': ['ReadOnlyField', 'HiddenField', 'ModelField',
                               'SerializerMethodField']
