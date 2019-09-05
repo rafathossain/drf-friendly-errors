@@ -44,7 +44,9 @@ class FriendlyErrorMessagesMixin(FieldMap):
             if error_code is None:
                 raise ValueError('For non field error you must provide '
                                  'an error code')
-            error = {'code': error_code, 'message': error_message,                     'field': None}
+            error = {'code': error_code,
+                     'message': error_message,
+                     'field': None}
             key = '%s_%s' % (error_message, error_code)
         else:
             key = field_name
@@ -65,7 +67,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
                     raise ValueError('Unknown error key: "%s" '
                                      'for field type: "%s"' %
                                      (error_key, field_type))
-            error = {'code': error_code, 'field': field_name,
+            error = {'code': error_code,
+                     'field': field_name,
                      'message': error_message}
 
         if meta is not None:
@@ -134,10 +137,12 @@ class FriendlyErrorMessagesMixin(FieldMap):
             kwargs.update({'max_length': getattr(field, 'max_length', None)})
         return kwargs
 
-    def _timezone(self):
+    @staticmethod
+    def _timezone():
         return timezone.get_current_timezone() if dj_settings.USE_TZ else None
 
-    def does_not_exist_many_to_many_handler(self, field, message, kwargs):
+    @staticmethod
+    def does_not_exist_many_to_many_handler(field, message, kwargs):
         unformatted = field.error_messages['does_not_exist']
         new_kwargs = kwargs
         for value in kwargs['value']:
@@ -209,7 +214,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
             error = force_text(errors[0])
 
         if self.is_default_error(error):
-            return {'code': settings.FRIENDLY_NON_FIELD_ERRORS['invalid'], 'field': field.field_name,
+            return {'code': settings.FRIENDLY_NON_FIELD_ERRORS['invalid'],
+                    'field': field.field_name,
                     'message': error}
         field_type = field.__class__.__name__
         key = self.find_key(field, error, field.field_name)
@@ -236,13 +242,16 @@ class FriendlyErrorMessagesMixin(FieldMap):
                             child_field, error, parent=field)
                         if validator:
                             code = self.get_validator_error_code(validator, error)
-                            return {'code': code, 'field': field.field_name, 'message': error}
+                            return {'code': code,
+                                    'field': field.field_name,
+                                    'message': error}
             # Here we know that error was raised by custom validate method
             # in serializer
             validator = getattr(self, "validate_%s" % field.field_name, None)
             if validator and self._run_validator(validator, field, error):
                 code = self.get_validator_error_code(validator, error)
-                return {'code': code, 'field': field.field_name,
+                return {'code': code,
+                        'field': field.field_name,
                         'message': error}
             elif settings.FRIENDLY_FIELD_ERRORS.get(field_type, None):
                 code = settings.FRIENDLY_FIELD_ERRORS.get(field_type, {}).get(getattr(error, 'code', None), None)
@@ -253,7 +262,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
                 # maybe field error was raised directly from `validate` method
                 code = self.FIELD_VALIDATION_ERRORS.get(
                     field.field_name, getattr(error, 'code', None))
-                return {'code': code, 'field': field.field_name,
+                return {'code': code,
+                        'field': field.field_name,
                         'message': error}
 
         code = settings.FRIENDLY_FIELD_ERRORS.get(field_type, {}).get(key, getattr(error, 'code', None))
@@ -286,12 +296,15 @@ class FriendlyErrorMessagesMixin(FieldMap):
                 return registered_error[error][0]
 
         if self.is_default_error(error):
-            return {'code': settings.FRIENDLY_NON_FIELD_ERRORS.get('invalid'), 'field': None,
+            return {'code': settings.FRIENDLY_NON_FIELD_ERRORS.get('invalid'),
+                    'field': None,
                     'message': error}
         code = self.NON_FIELD_ERRORS.get(
             error, settings.FRIENDLY_NON_FIELD_ERRORS.get(
                 error, getattr(original_error, 'code', None)))
-        return {'code': code, 'field': None, 'message': error}
+        return {'code': code,
+                'field': None,
+                'message': error}
 
     def get_non_field_error_entries(self, errors):
         return [self.get_non_field_error_entry(error) for error in errors]
