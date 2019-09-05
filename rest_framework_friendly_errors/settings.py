@@ -3,8 +3,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from rest_framework_friendly_errors.utils import update_field_settings
-
+from .utils import update_field_settings
 
 USER_SETTINGS = getattr(settings, 'FRIENDLY_ERRORS', {})
 
@@ -71,6 +70,10 @@ FRIENDLY_FIELD_ERRORS = {
     'StringRequiredField': {'required': 2007, 'null': 2027},
     'PrimaryKeyRelatedField': {'required': 2007, 'null': 2027,
                                'does_not_exist': 2151, 'incorrect_type': 2161},
+    'CitixenPrimaryKeyRelatedField': {'required': 2007, 'null': 2027,
+                                      'does_not_exist': 2151, 'incorrect_type': 2161},
+    'CitixenGroupPermissionRelatedField': {'required': 2007, 'null': 2027,
+                                           'does_not_exist': 2151, 'incorrect_type': 2161},
     'HyperlinkedRelatedField': {'required': 2007, 'null': 2027,
                                 'does_not_exist': 2151, 'incorrect_type': 2161,
                                 'incorrect_match': 2171, 'no_match': 2171},
@@ -130,6 +133,8 @@ FRIENDLY_VALIDATOR_ERRORS = {
 
 FRIENDLY_VALIDATOR_ERRORS.update(USER_VALIDATOR_ERRORS)
 
+# https://www.django-rest-framework.org/api-guide/exceptions/
+
 FRIENDLY_EXCEPTION_DICT = {
     'APIException': 4000,
     'ParseError': 4001,
@@ -140,6 +145,7 @@ FRIENDLY_EXCEPTION_DICT = {
     'MethodNotAllowed': 4006,
     'NotAcceptable': 4007,
     'UnsupportedMediaType': 4008,
-    'Throttled': 4009
+    'Throttled': 4009,
+    'ValidationError': 4010
 }
 FRIENDLY_EXCEPTION_DICT.update(USER_EXCEPTION_DICT)
