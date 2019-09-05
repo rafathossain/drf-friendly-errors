@@ -82,7 +82,7 @@ FRIENDLY_FIELD_ERRORS = {
     'HyperlinkedIdentityField': {'required': 2001, 'null': 2027,
                                  'does_not_exist': 2151, 'incorrect_type': 2161,
                                  'incorrect_match': 2171, 'no_match': 2171},
-    'ManyRelatedField': {'required': 2007, 'null': 2027,
+    'ManyRelatedField': {'required': 2007, 'null': 2027, 'does_not_exist': 2151,
                          'invalid_choice': 2083, 'not_a_list': 2123,
                          'empty': 2093},
 
@@ -132,8 +132,6 @@ FRIENDLY_VALIDATOR_ERRORS = {
 }
 
 FRIENDLY_VALIDATOR_ERRORS.update(USER_VALIDATOR_ERRORS)
-
-# https://www.django-rest-framework.org/api-guide/exceptions/
 
 FRIENDLY_EXCEPTION_DICT = {
     'APIException': 4000,
