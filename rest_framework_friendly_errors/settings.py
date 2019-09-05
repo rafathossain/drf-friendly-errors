@@ -50,7 +50,7 @@ FRIENDLY_FIELD_ERRORS = {
                      'max_value': 2061, 'max_whole_digits': 2011,
                      'max_digits': 2012, 'max_decimal_places': 2013},
 
-    'ChoiceField': {'required': 2004, 'null': 2024, 'invalid_choice': 2081},
+    'ChoiceField': {'required': 2004, 'null': 2024, 'invalid_choice': 2081, 'invalid': 2081},
     'MultipleChoiceField': {'required': 2004, 'null': 2024,
                             'invalid_choice': 2081, 'not_a_list': 2121,
                             'empty': 2092},

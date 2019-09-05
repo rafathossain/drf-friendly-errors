@@ -1,6 +1,8 @@
 from django.conf.urls import url
 
-from tests import views, exceptions
+from . import exceptions, views
+
+app_name = 'api'
 
 urlpatterns = [
     url(r'^snippets/$', views.SnippetList.as_view(), name='snippet-list'),

@@ -4,7 +4,8 @@ from django.conf import settings as dj_settings
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils import timezone
 from django.utils.encoding import force_text
-from rest_framework.exceptions import ValidationError as RestValidationError, ErrorDetail
+from rest_framework.exceptions import ErrorDetail
+from rest_framework.exceptions import ValidationError as RestValidationError
 from rest_framework.settings import api_settings
 from rest_framework.utils.serializer_helpers import ReturnDict
 
@@ -225,6 +226,10 @@ class FriendlyErrorMessagesMixin(FieldMap):
             if validator:
                 try:
                     name = validator.__name__
+                    code = self.FIELD_VALIDATION_ERRORS.get(name) or settings.FRIENDLY_VALIDATOR_ERRORS.get(name)
+                    return {'code': code,
+                            'field': field.field_name,
+                            'message': error}
                 except AttributeError:
                     name = validator.__class__.__name__
                     code = self.FIELD_VALIDATION_ERRORS.get(name) or settings.FRIENDLY_VALIDATOR_ERRORS.get(name)
@@ -253,15 +258,20 @@ class FriendlyErrorMessagesMixin(FieldMap):
                 return {'code': code,
                         'field': field.field_name,
                         'message': error}
+            # maybe field error was raised directly from `validate` method
+            elif self.FIELD_VALIDATION_ERRORS.get(field.field_name, None):
+                code = self.FIELD_VALIDATION_ERRORS.get(
+                    field.field_name, getattr(error, 'code', None))
+                return {'code': code,
+                        'field': field.field_name,
+                        'message': error}
             elif settings.FRIENDLY_FIELD_ERRORS.get(field_type, None):
                 code = settings.FRIENDLY_FIELD_ERRORS.get(field_type, {}).get(getattr(error, 'code', None), None)
                 return {'code': code,
                         'field': field.field_name,
                         'message': error}
             else:
-                # maybe field error was raised directly from `validate` method
-                code = self.FIELD_VALIDATION_ERRORS.get(
-                    field.field_name, getattr(error, 'code', None))
+                code = getattr(error, 'code', None)
                 return {'code': code,
                         'field': field.field_name,
                         'message': error}
@@ -278,7 +288,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
         for error in errors:
             error_entry = self.get_field_error_entry(error, field)
             if isinstance(error, dict):
-                error_entry['field'] = list(error.items())[0][0]
+                error_entry['field'] = list(error.items())[1][1]
             error_entries.append(error_entry)
         return error_entries
 
