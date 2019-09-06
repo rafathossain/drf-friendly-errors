@@ -288,7 +288,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
         for error in errors:
             error_entry = self.get_field_error_entry(error, field)
             if isinstance(error, dict):
-                error_entry['field'] = list(error.items())[1][1]
+                error_entry['field'] = error.get("field", None)
             error_entries.append(error_entry)
         return error_entries
 
