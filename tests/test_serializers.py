@@ -171,16 +171,21 @@ class SerializerErrorsTestCase(BaseTestCase):
         self.data_set['language'] = 'c++'
         s = run_is_valid(AnotherSnippetModelSerializer, data=self.data_set)
         code = FRIENDLY_FIELD_ERRORS['ChoiceField']['invalid_choice']
-        self.assertEqual(s.errors['errors'][0]['field'], 'language')
-        self.assertEqual(s.errors['errors'][0]['code'], code)
+        errors = s.errors['errors']
+        self.assertIsNotNone(errors)
+        self.assertEqual(type(errors), list)
+        self.assertEqual(errors[0]['field'], 'language')
+        self.assertEqual(errors[0]['code'], code)
 
     def test_single_field_error_registration(self):
         self.data_set['title'] = 'A Python'
         self.data_set['language'] = 'c++'
         s = run_is_valid(RegisterSingleFieldErrorSerializer, data=self.data_set)
         code = FRIENDLY_FIELD_ERRORS['ChoiceField']['invalid_choice']
-        self.assertEqual(type(s.errors['errors']), list)
-        self.assertEqual(s.errors['errors'][0]['code'], code)
+        errors = s.errors['errors']
+        self.assertIsNotNone(errors)
+        self.assertEqual(type(errors), list)
+        self.assertEqual(errors[0]['code'], code)
 
     def test_multiple_fields_error_registration(self):
         self.data_set['title'] = 'A Python'
@@ -188,17 +193,13 @@ class SerializerErrorsTestCase(BaseTestCase):
         s = run_is_valid(RegisterMultipleFieldsErrorSerializer,
                          data=self.data_set)
 
-        self.assertIsNotNone(s.errors['errors'])
-        self.assertEqual(type(s.errors['errors']), list)
+        errors = s.errors['errors']
+        self.assertIsNotNone(errors)
+        self.assertEqual(type(errors), list)
         code = FRIENDLY_FIELD_ERRORS['ChoiceField']['invalid_choice']
-        c = s.errors['errors'][0]['code']
-        self.assertEqual(c, code)
-
-        self.assertIsNotNone(s.errors['errors'])
-        self.assertEqual(type(s.errors['errors']), list)
+        self.assertEqual(errors[0]['code'], code)
         code = FRIENDLY_FIELD_ERRORS['BooleanField']['invalid']
-        c = s.errors['errors'][1]['code']
-        self.assertEqual(c, code)
+        self.assertEqual(errors[1]['code'], code)
 
     # def test_mix_errors_registration(self):
     #     self.data_set['title'] = 'A Python'
@@ -247,7 +248,6 @@ class SerializerErrorsTestCase(BaseTestCase):
         s = run_is_valid(FieldsErrorAsDictInValidateSerializer,
                          data=self.data_set)
         errors = s.errors['errors']
-
         self.assertIsNotNone(errors)
         self.assertEqual(type(errors), list)
         for error in errors:
@@ -264,14 +264,16 @@ class SerializerErrorsTestCase(BaseTestCase):
     def test_failed_relation_lookup(self):
         s = run_is_valid(SnippetValidator, data={'title': 'invalid'})
         code = FRIENDLY_FIELD_ERRORS['SlugRelatedField']['does_not_exist']
-        self.assertIsNotNone(s.errors['errors'])
-        self.assertEqual(type(s.errors['errors']), list)
-        self.assertEqual(s.errors['errors'][0]['code'], code)
+        errors = s.errors['errors']
+        self.assertIsNotNone(errors)
+        self.assertEqual(type(errors), list)
+        self.assertEqual(errors[0]['code'], code)
 
     def test_failed_relation_lookup_many_to_many(self):
         data = {'title': ['another', 'invalid']}
         s = run_is_valid(SnippetValidator, data=data)
         code = FRIENDLY_FIELD_ERRORS['SlugRelatedField']['does_not_exist']
-        self.assertIsNotNone(s.errors['errors'])
-        self.assertEqual(type(s.errors['errors']), list)
-        self.assertEqual(s.errors['errors'][0]['code'], code)
+        errors = s.errors['errors']
+        self.assertIsNotNone(errors)
+        self.assertEqual(type(errors), list)
+        self.assertEqual(errors[0]['code'], code)

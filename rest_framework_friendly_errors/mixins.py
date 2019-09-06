@@ -128,9 +128,9 @@ class FriendlyErrorMessagesMixin(FieldMap):
             kwargs.update({'input_type': type(field_data).__name__,
                            'max_length': getattr(field, 'max_length', None),
                            'min_length': getattr(field, 'min_length', None)})
-        elif field_type in self.field_map['relation']:
+        elif field_type in self.field_map['relation'] \
+            or field_type in self.field_map['serializer']:
             kwargs.update({'pk_value': field_data,
-                           'data_type': type(field_data).__name__,
                            'input_type': type(field_data).__name__,
                            'slug_name': getattr(field, 'slug_field', None),
                            'value': field_data})
@@ -160,7 +160,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
             if key == 'does_not_exist' \
                 and isinstance(kwargs.get('value'), list) \
                 and self.does_not_exist_many_to_many_handler(
-                    field, message, kwargs):
+                field, message, kwargs):
                 return key
             unformatted = field.error_messages[key]
             try:
@@ -240,8 +240,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
                 # but field might be using another serializer
                 # with `many=True` option
                 if getattr(field, 'child', None) \
-                        and getattr(field, 'parent', None) == self \
-                        and field.__class__.__name__ == 'ListSerializer':
+                    and getattr(field, 'parent', None) == self \
+                    and field.__class__.__name__ == 'ListSerializer':
                     for _, child_field in field.child.fields.items():
                         validator = self.find_validator(
                             child_field, error, parent=field)
@@ -288,7 +288,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
         for error in errors:
             error_entry = self.get_field_error_entry(error, field)
             if isinstance(error, dict):
-                error_entry['field'] = error.get("field", None)
+                error_entry['field'] = error.get('field', field.field_name)
+                error_entry['message'] = error
             error_entries.append(error_entry)
         return error_entries
 
