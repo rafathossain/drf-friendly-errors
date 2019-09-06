@@ -1,7 +1,13 @@
-DRF Friendly Errors
-===================
+DRF Friendly Errors (New Version: Django & DRF)
+===============================================
 
 **Extension for Django REST framework error display**
+
+.. image:: https://travis-ci.org/frankyjquintero/drf-friendly-errors.svg?branch=master
+    :target: https://travis-ci.org/frankyjquintero/drf-friendly-errors
+
+
+* Fork From: https://github.com/FutureMind/drf-friendly-errors
 
 Overview
 --------
@@ -55,9 +61,9 @@ Library handles all `Django REST framework`_ built-in serializer validation.
 
 Requirements
 ------------
--  Python (2.7, 3.4)
--  Django (1.8, 1.9)
--  Django REST framework (3.3)
+-  Python (3.6, 3.7, 3.8-dev)
+-  Django (1.11, 2.0, 2.1, 2.2, 2.2.5)
+-  Django REST framework (3.7, 3.8, 3.9, 3.10)
 
 Installation
 ------------
@@ -68,7 +74,7 @@ By running installation script
 
     $ python setup.py install
 
-Or using pip
+Or using pip (pendent register xD)
 
 .. code:: bash
 
@@ -320,16 +326,21 @@ Default built-in validators error codes
 
 Other error codes not related to serializer validation
 ------------------------------------------------------
+
+API Reference - APIException : https://www.django-rest-framework.org/api-guide/exceptions/#api-reference
+
+
 - Server Error: 4000
 - Parser Error (exception was raised by Parser class): 4001,
 - Authentication Failed (invalid credentials were provided): 4002,
 - Not Authenticated (no credentials were provided): 4003,
-- Not Found: 4004,
+- Not Found (Http404): 4004,
 - Permission Denied: 4005,
 - Method Not Allowed (invalid HTTP method): 4006,
 - Not Acceptable (Could not satisfy the request Accept header): 4007,
 - Unsupported Media-Type: 4008,
 - Throttled (Too many requests): 4009
+- ValidationError: 4010
 
 Tests
 -----
@@ -345,3 +356,4 @@ Pull requests won't be accepted without passing tests. You can run the test suit
 Contributors
 ------------
 - Geoffrey Lehée <socketubs>
+- Franky Quintero <frankyjquintero>

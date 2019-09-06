@@ -70,7 +70,10 @@ setup(
     license='MIT',
     description='Extension for displaying serializer validation errors'
                 ' in Django Rest Framework',
-    author='Tomasz Łaszczuk',
+    long_description='Extension for displaying serializer validation errors'
+                ' in Django Rest Framework',
+    url='https://github.com/citixensas/drf-friendly-errors',
+    author='Tomasz Łaszczuk(original), Franky Quintero(New version)',
     author_email='t.laszczuk@futuremind.com',
     packages=get_packages('rest_framework_friendly_errors'),
     package_data=get_package_data('rest_framework_friendly_errors'),

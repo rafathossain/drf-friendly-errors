@@ -1,11 +1,10 @@
 from rest_framework_friendly_errors.settings import (
-    FRIENDLY_FIELD_ERRORS, FRIENDLY_NON_FIELD_ERRORS,
-    FRIENDLY_VALIDATOR_ERRORS)
+    FRIENDLY_FIELD_ERRORS, FRIENDLY_NON_FIELD_ERRORS
+)
 
 from . import BaseTestCase
 from .serializers import (
-    AnotherSnippetModelSerializer, FieldModelSerializer,
-    FieldOptionModelSerializer, SnippetModelSerializer,
+    AnotherSnippetModelSerializer, SnippetModelSerializer,
     ThirdSnippetModelSerializer
 )
 from .utils import run_is_valid

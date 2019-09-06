@@ -170,8 +170,8 @@ class SerializerErrorsTestCase(BaseTestCase):
         self.data_set['title'] = 'A Python'
         self.data_set['language'] = 'c++'
         s = run_is_valid(AnotherSnippetModelSerializer, data=self.data_set)
-        self.assertEqual(s.errors['errors'][0]['field'], 'language')
         code = FRIENDLY_FIELD_ERRORS['ChoiceField']['invalid_choice']
+        self.assertEqual(s.errors['errors'][0]['field'], 'language')
         self.assertEqual(s.errors['errors'][0]['code'], code)
 
     def test_single_field_error_registration(self):
@@ -250,12 +250,16 @@ class SerializerErrorsTestCase(BaseTestCase):
 
         self.assertIsNotNone(errors)
         self.assertEqual(type(errors), list)
-        self.assertEqual(errors[0]['code'], 'custom_code')
-        self.assertEqual(errors[0]['message'], 'not good')
-        self.assertEqual(errors[1]['code'], 2011)
-        self.assertEqual(errors[1]['message'], 'not good')
-        self.assertEqual(errors[2]['code'], 2081)
-        self.assertEqual(errors[2]['message'], 'not good')
+        for error in errors:
+            if error['field'] == 'title':
+                self.assertEqual(error['code'], 'custom_code')
+                self.assertEqual(error['message'], 'not good')
+            if error['field'] == 'linenos':
+                self.assertEqual(error['code'], 2011)
+                self.assertEqual(error['message'], 'not good')
+            if error['field'] == 'language':
+                self.assertEqual(error['code'], 2081)
+                self.assertEqual(error['message'], 'not good')
 
     def test_failed_relation_lookup(self):
         s = run_is_valid(SnippetValidator, data={'title': 'invalid'})
