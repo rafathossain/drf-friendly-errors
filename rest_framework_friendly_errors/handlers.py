@@ -21,7 +21,7 @@ def friendly_exception_handler(exc, context):
         errors = []
         for field, value in data.items():
             message = value[0] if type(value) is list else value
-            errors.append({"code": None, "field": field, "message": message})
+            errors.append({"field": field, "message": message})
 
         response.data = {'code': error_code, 'message': error_message,
                          'status_code': response.status_code, 'errors': errors}
