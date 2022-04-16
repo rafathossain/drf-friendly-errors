@@ -8,6 +8,7 @@ DRF Friendly Errors (New Version: Django & DRF)
 
 
 * Fork From: https://github.com/FutureMind/drf-friendly-errors
+* Added support for django >= 4.0
 
 Overview
 --------

@@ -9,6 +9,10 @@ import sys
 from setuptools import setup
 
 
+def read(f):
+    return open(f, 'r', encoding='utf-8').read()
+
+
 def get_version(package):
     """
     Return package version as listed in `__version__` in `init.py`.
@@ -65,15 +69,14 @@ if sys.argv[-1] == 'publish':
 
 
 setup(
-    name='drf-friendly-errors',
+    name='drf-friendly-errors-django-4',
     version=version,
     license='MIT',
     description='Extension for displaying serializer validation errors'
                 ' in Django Rest Framework',
-    long_description='Extension for displaying serializer validation errors'
-                ' in Django Rest Framework',
+    long_description=read('readme.rst'),
     url='https://github.com/citixensas/drf-friendly-errors',
-    author='Tomasz Łaszczuk(original), Franky Quintero(New version)',
+    author='Tomasz Łaszczuk(original), Franky Quintero(New version), Rafat Hossain(Django 4.0)',
     author_email='t.laszczuk@futuremind.com',
     packages=get_packages('rest_framework_friendly_errors'),
     package_data=get_package_data('rest_framework_friendly_errors'),
